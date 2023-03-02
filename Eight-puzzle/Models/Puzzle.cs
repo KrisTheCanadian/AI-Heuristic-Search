@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Eight_puzzle;
+namespace Eight_puzzle.Models;
 
 public class Puzzle
 {

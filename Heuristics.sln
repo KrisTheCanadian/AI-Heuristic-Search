@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heuristics", "Heuristics\Heuristics.csproj", "{765F6A36-6E93-407B-B4D1-2CA1244B4E73}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Numberlink-puzzle", "Numberlink-puzzle\Numberlink-puzzle.csproj", "{B85A5E39-C109-4D18-8A52-B0183319978A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eight-puzzle", "Eight-puzzle\Eight-puzzle.csproj", "{ED46C1F2-8AB3-4311-9D0C-2838A64C0710}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +10,13 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{765F6A36-6E93-407B-B4D1-2CA1244B4E73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{765F6A36-6E93-407B-B4D1-2CA1244B4E73}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{765F6A36-6E93-407B-B4D1-2CA1244B4E73}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{765F6A36-6E93-407B-B4D1-2CA1244B4E73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B85A5E39-C109-4D18-8A52-B0183319978A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B85A5E39-C109-4D18-8A52-B0183319978A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B85A5E39-C109-4D18-8A52-B0183319978A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B85A5E39-C109-4D18-8A52-B0183319978A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED46C1F2-8AB3-4311-9D0C-2838A64C0710}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED46C1F2-8AB3-4311-9D0C-2838A64C0710}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED46C1F2-8AB3-4311-9D0C-2838A64C0710}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED46C1F2-8AB3-4311-9D0C-2838A64C0710}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
