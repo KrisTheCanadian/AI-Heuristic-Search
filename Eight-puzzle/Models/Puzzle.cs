@@ -5,7 +5,7 @@ namespace Eight_puzzle.Models;
 
 public class Puzzle
 {
-    private List<List<int>> Board { get; }
+    public List<List<int>> Board { get; }
     public Puzzle? Parent { get; set; }
 
     private static Puzzle _goalState = new(new[,]

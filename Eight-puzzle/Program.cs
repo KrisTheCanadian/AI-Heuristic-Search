@@ -1,4 +1,7 @@
 ﻿using Eight_puzzle.Models;
+using Eight_puzzle.Utils.Heuristics;
+using Eight_puzzle.Utils.Heuristics.Interfaces;
+using Eight_puzzle.Utils.Heuristics.Strategies;
 using Eight_puzzle.Utils.Search;
 using Eight_puzzle.Utils.Search.Interfaces;
 using Eight_puzzle.Utils.Search.Strategies;
@@ -22,6 +25,8 @@ Puzzle.SetGoalState(goalState);
 // ask the user for the search strategy
 Console.WriteLine("1. Breadth-first search");
 Console.WriteLine("2. Depth-first search");
+Console.WriteLine("3. Best-first search");
+Console.WriteLine("4. A* search");
 Console.Write("Enter the search strategy: ");
 
 var input = Console.ReadLine();
@@ -31,11 +36,44 @@ if (input == null) throw new Exception("Invalid input");
 
 var strategy = int.Parse(input);
 
+// if option 3 or 4 is chosen, ask the user for the heuristic function
+
+HeuristicContext? heuristicContext = null;
+
+if(input is "3" or "4")
+{
+    Console.WriteLine("1. Hamming distance");
+    Console.WriteLine("2. Manhattan distance");
+    Console.WriteLine("3. Permutation inversion heuristic");
+    Console.Write("Enter the heuristic function: ");
+
+    input = Console.ReadLine();
+    Console.WriteLine();
+
+    if (input == null) throw new Exception("Invalid input");
+
+    var heuristic = int.Parse(input);
+
+    // create the heuristic strategy
+    IHeuristicStrategy heuristicStrategy = heuristic switch
+    {
+        1 => new HammingDistanceStrategy(),
+        2 => new ManhattanDistanceStrategy(),
+        3 => new PermutationInversionStrategy(),
+        _ => throw new Exception("Invalid input")
+    };
+
+    // create the heuristic context
+    heuristicContext = new HeuristicContext(heuristicStrategy);
+}
+
 // create the search strategy
 ISearchStrategy searchStrategy = strategy switch
 {
     1 => new BreadthFirstSearch(),
     2 => new DepthFirstSearch(),
+    3 => new BestFirstSearch(heuristicContext!),
+    4 => new AStarSearch(heuristicContext!),
     _ => throw new Exception("Invalid input")
 };
 
