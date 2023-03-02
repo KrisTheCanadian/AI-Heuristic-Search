@@ -48,6 +48,22 @@ public class Puzzle
         puzzle = new Puzzle(initialState);
         return false;
     }
+    
+    public (int, int) GetTileCoordinates(int value)
+    {
+        for (var i = 0; i < 3; i++)
+        {
+            for (var j = 0; j < 3; j++)
+            {
+                if (Board[i][j] == value)
+                {
+                    return (i, j);
+                }
+            }
+        }
+    
+        throw new ArgumentException($"Tile with value {value} not found in puzzle.");
+    }
 
     public static Puzzle GetGoalState()
     {
@@ -278,5 +294,10 @@ public class Puzzle
     public override int GetHashCode()
     {
         return Board.GetHashCode();
+    }
+
+    public int GetBlankTileRow()
+    {
+        return GetBlankTile() / 3;
     }
 }
