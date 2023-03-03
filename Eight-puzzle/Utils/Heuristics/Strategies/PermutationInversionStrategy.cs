@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Eight_puzzle.Models;
 using Eight_puzzle.Utils.Heuristics.Interfaces;
 
@@ -47,7 +45,7 @@ namespace Eight_puzzle.Utils.Heuristics.Strategies
             return distance;
         }
 
-        private bool IsOdd(int n)
+        private static bool IsOdd(int n)
         {
             return n % 2 != 0;
         }
