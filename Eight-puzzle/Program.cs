@@ -47,6 +47,7 @@ if(input is "3" or "4")
     Console.WriteLine("2. Manhattan distance");
     Console.WriteLine("3. Permutation inversion heuristic");
     Console.WriteLine("4. Linear conflicts heuristic");
+    Console.WriteLine("5. Double Manhattan distance heuristic (InAdmissible)");
     Console.Write("Enter the heuristic function: ");
 
     input = Console.ReadLine();
@@ -63,6 +64,7 @@ if(input is "3" or "4")
         2 => new ManhattanDistanceStrategy(),
         3 => new PermutationInversionStrategy(),
         4 => new LinearConflictsStrategy(),
+        5 => new DoubleManhattanDistanceStrategy(),
         _ => throw new Exception("Invalid input")
     };
 
