@@ -19,12 +19,12 @@ namespace Eight_puzzle.Utils.Search.Strategies
             if (puzzle.Equals(goalState)) return new List<Puzzle> { puzzle };
 
             var frontier = new PriorityQueue<Puzzle, int>();
-            frontier.Enqueue(puzzle, 0);
+            frontier.Enqueue(puzzle, _heuristicContext.GetHeuristicValue(puzzle));
 
             var cameFrom = new Dictionary<Puzzle, Puzzle?>();
             var costSoFar = new Dictionary<Puzzle, int>();
             cameFrom[puzzle] = null;
-            costSoFar[puzzle] = 0;
+            costSoFar[puzzle] = _heuristicContext.GetHeuristicValue(puzzle);
 
             while (frontier.Count > 0)
             {
@@ -47,8 +47,7 @@ namespace Eight_puzzle.Utils.Search.Strategies
                     var newCost = costSoFar[current] + 1;
                     if (costSoFar.ContainsKey(child) && newCost >= costSoFar[child]) continue;
                     costSoFar[child] = newCost;
-                    var priority = newCost + _heuristicContext.GetHeuristicValue(child);
-                    frontier.Enqueue(child, priority);
+                    frontier.Enqueue(child, newCost + _heuristicContext.GetHeuristicValue(child));
                     cameFrom[child] = current;
                 }
             }

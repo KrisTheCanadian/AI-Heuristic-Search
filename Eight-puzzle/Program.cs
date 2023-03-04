@@ -1,4 +1,5 @@
 ﻿using Eight_puzzle.Models;
+using Eight_puzzle.Utils;
 using Eight_puzzle.Utils.Heuristics;
 using Eight_puzzle.Utils.Heuristics.Interfaces;
 using Eight_puzzle.Utils.Heuristics.Strategies;
@@ -79,6 +80,12 @@ ISearchStrategy searchStrategy = strategy switch
 
 // create the search context
 var searchContext = new SearchContext(searchStrategy);
+
+// check to see if the puzzle is solvable
+if (!Validator.IsSolvable(puzzle)) {
+    Console.WriteLine("The puzzle is not solvable.");
+    return;
+}
 
 // start the timer
 var watch = System.Diagnostics.Stopwatch.StartNew();

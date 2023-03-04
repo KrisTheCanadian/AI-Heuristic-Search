@@ -7,47 +7,32 @@ namespace Eight_puzzle.Utils.Heuristics.Strategies
     {
         public int GetHeuristicValue(Puzzle puzzle)
         {
-            var distance = 0;
-            var permutation = new List<int>();
-            var goalState = Puzzle.GetGoalState();
+            var state2d = puzzle.Board;
 
-            // Create permutation from puzzle state
-            for (var i = 0; i < 3; i++)
+            // Convert 2d array to 1d array
+            var state = state2d.SelectMany(x => x).ToArray();
+
+            var goalState2d = Puzzle.GetGoalState().Board;
+
+            // Convert 2d array to 1d array
+            var goalState = goalState2d.SelectMany(x => x).ToArray();
+
+            var count = 0;
+            for (var i = 0; i < 9; i++)
             {
-                for (var j = 0; j < 3; j++)
+                for (var j = i + 1; j < 9; j++)
                 {
-                    var value = puzzle.Board[i][j];
-                    if (value != 0)
+                    if (state[j] != 0 && state[i] != 0)
                     {
-                        permutation.Add(value);
+                        if (Array.IndexOf(goalState, state[i]) > Array.IndexOf(goalState, state[j]))
+                        {
+                            count++;
+                        }
                     }
                 }
             }
 
-            // Calculate number of inversions in permutation
-            for (var i = 0; i < permutation.Count - 1; i++)
-            {
-                for (var j = i + 1; j < permutation.Count; j++)
-                {
-                    if (permutation[i] > permutation[j])
-                    {
-                        distance++;
-                    }
-                }
-            }
-
-            // If the blank tile is on an odd row counting from the bottom, add 1 to the distance
-            if (IsOdd(goalState.GetBlankTileRow() + 1))
-            {
-                distance++;
-            }
-
-            return distance;
-        }
-
-        private static bool IsOdd(int n)
-        {
-            return n % 2 != 0;
+            return count;
         }
     }
 }

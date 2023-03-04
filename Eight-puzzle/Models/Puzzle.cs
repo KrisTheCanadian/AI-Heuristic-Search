@@ -1,3 +1,4 @@
+using System.IO.Hashing;
 using System.Text;
 using Eight_puzzle.Utils;
 
@@ -282,18 +283,24 @@ public class Puzzle
             return false;
         
         var other = (Puzzle) obj;
-        
-        return other.ToString().Equals(ToString());
+        var otherStr = other.ToString();
+
+        return otherStr.Equals(ToString());
     }
 
     protected bool Equals(Puzzle other)
     {
-        return Board.Equals(other.Board);
+        return other.ToString().Equals(ToString());
     }
 
     public override int GetHashCode()
     {
-        return Board.GetHashCode();
+        var crc = new Crc32();
+        crc.Append(Encoding.ASCII.GetBytes(ToString()));
+        var hash = crc.GetCurrentHash();
+        var i = BitConverter.ToInt32(hash, 0);
+
+        return i;
     }
 
     public int GetBlankTileRow()
