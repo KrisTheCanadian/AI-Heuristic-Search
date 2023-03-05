@@ -6,14 +6,11 @@ namespace Eight_puzzle.Models;
 
 public class Puzzle
 {
-    public List<List<int>> Board { get; }
-    public Puzzle? Parent { get; set; }
-
     private static Puzzle _goalState = new(new[,]
     {
-        {1, 2, 3},
-        {4, 5, 6},
-        {7, 8, 0}
+        { 1, 2, 3 },
+        { 4, 5, 6 },
+        { 7, 8, 0 }
     });
 
     private Puzzle(int[,] board)
@@ -22,24 +19,21 @@ public class Puzzle
         for (var i = 0; i < 3; i++)
         {
             var row = new List<int>();
-            for (var j = 0; j < 3; j++)
-            {
-                row.Add(board[i, j]);
-            }
+            for (var j = 0; j < 3; j++) row.Add(board[i, j]);
 
             Board.Add(row);
         }
     }
-    
+
+    public List<List<int>> Board { get; }
+    public Puzzle? Parent { get; set; }
+
     public static bool CreatePuzzle(out Puzzle puzzle)
     {
         // Read the initial state of the puzzle
         var input = Console.ReadLine();
 
-        if (input == null)
-        {
-            throw new Exception("Invalid input");
-        }
+        if (input == null) throw new Exception("Invalid input");
 
         var inputArray = input.Split(' ');
 
@@ -49,20 +43,14 @@ public class Puzzle
         puzzle = new Puzzle(initialState);
         return false;
     }
-    
+
     public (int, int) GetTileCoordinates(int value)
     {
         for (var i = 0; i < 3; i++)
-        {
-            for (var j = 0; j < 3; j++)
-            {
-                if (Board[i][j] == value)
-                {
-                    return (i, j);
-                }
-            }
-        }
-    
+        for (var j = 0; j < 3; j++)
+            if (Board[i][j] == value)
+                return (i, j);
+
         throw new ArgumentException($"Tile with value {value} not found in puzzle.");
     }
 
@@ -70,7 +58,7 @@ public class Puzzle
     {
         return _goalState;
     }
-    
+
     public static void SetGoalState(Puzzle goalState)
     {
         _goalState = goalState;
@@ -80,7 +68,7 @@ public class Puzzle
     {
         var successorStates = new List<Puzzle>();
         // operations: up, down, left, right
-        
+
         // check if the blank tile can move up
         var blankTile = GetBlankTile();
         switch (blankTile)
@@ -101,7 +89,7 @@ public class Puzzle
             }
         }
 
-        if(blankTile < 6)
+        if (blankTile < 6)
         {
             // blank tile is not in the last row
             var down = MoveDown();
@@ -111,8 +99,8 @@ public class Puzzle
                 successorStates.Add(down);
             }
         }
-        
-        if(blankTile % 3 != 0)
+
+        if (blankTile % 3 != 0)
         {
             // blank tile is not in the first column
             var left = MoveLeft();
@@ -131,26 +119,19 @@ public class Puzzle
         successorStates.Add(right);
 
         return successorStates;
-        
     }
 
     public IEnumerable<Puzzle> GetChildren()
     {
-        return GetSuccessorStates();    
+        return GetSuccessorStates();
     }
 
     private int GetBlankTile()
     {
         for (var i = 0; i < 3; i++)
-        {
-            for (var j = 0; j < 3; j++)
-            {
-                if (Board[i][j] == 0)
-                {
-                    return i * 3 + j;
-                }
-            }
-        }
+        for (var j = 0; j < 3; j++)
+            if (Board[i][j] == 0)
+                return i * 3 + j;
 
         return -1;
     }
@@ -169,12 +150,8 @@ public class Puzzle
 
         var newBoard = new int[3, 3];
         for (var i = 0; i < 3; i++)
-        {
-            for (var j = 0; j < 3; j++)
-            {
-                newBoard[i, j] = Board[i][j];
-            }
-        }
+        for (var j = 0; j < 3; j++)
+            newBoard[i, j] = Board[i][j];
 
         var temp = newBoard[blankTile / 3 - 1, blankTile % 3];
         newBoard[blankTile / 3 - 1, blankTile % 3] = 0;
@@ -193,73 +170,57 @@ public class Puzzle
                 // blank tile is in the last row
                 return null;
         }
-        
+
         var newBoard = new int[3, 3];
         for (var i = 0; i < 3; i++)
-        {
-            for (var j = 0; j < 3; j++)
-            {
-                newBoard[i, j] = Board[i][j];
-            }
-        }
-        
+        for (var j = 0; j < 3; j++)
+            newBoard[i, j] = Board[i][j];
+
         var temp = newBoard[blankTile / 3 + 1, blankTile % 3];
         newBoard[blankTile / 3 + 1, blankTile % 3] = 0;
         newBoard[blankTile / 3, blankTile % 3] = temp;
         return new Puzzle(newBoard);
     }
-    
+
     private Puzzle? MoveLeft()
     {
         var blankTile = GetBlankTile();
-        if(blankTile == -1){ throw new Exception("Invalid puzzle state"); }
-        if(blankTile % 3 == 0)
-        {
+        if (blankTile == -1) throw new Exception("Invalid puzzle state");
+        if (blankTile % 3 == 0)
             // blank tile is in the first column
             return null;
-        }
-        
+
         var newBoard = new int[3, 3];
         for (var i = 0; i < 3; i++)
-        {
-            for (var j = 0; j < 3; j++)
-            {
-                newBoard[i, j] = Board[i][j];
-            }
-        }
-        
+        for (var j = 0; j < 3; j++)
+            newBoard[i, j] = Board[i][j];
+
         var temp = newBoard[blankTile / 3, blankTile % 3 - 1];
         newBoard[blankTile / 3, blankTile % 3 - 1] = 0;
         newBoard[blankTile / 3, blankTile % 3] = temp;
         return new Puzzle(newBoard);
     }
-    
+
     private Puzzle? MoveRight()
     {
         var blankTile = GetBlankTile();
-        if(blankTile == -1){ throw new Exception("Invalid puzzle state"); }
-        if(blankTile % 3 == 2)
-        {
+        if (blankTile == -1) throw new Exception("Invalid puzzle state");
+        if (blankTile % 3 == 2)
             // blank tile is in the last column
             return null;
-        }
-        
+
         var newBoard = new int[3, 3];
         for (var i = 0; i < 3; i++)
-        {
-            for (var j = 0; j < 3; j++)
-            {
-                newBoard[i, j] = Board[i][j];
-            }
-        }
-        
+        for (var j = 0; j < 3; j++)
+            newBoard[i, j] = Board[i][j];
+
         var temp = newBoard[blankTile / 3, blankTile % 3 + 1];
         newBoard[blankTile / 3, blankTile % 3 + 1] = 0;
         newBoard[blankTile / 3, blankTile % 3] = temp;
         return new Puzzle(newBoard);
     }
-    
-    
+
+
     public override string ToString()
     {
         var sb = new StringBuilder();
@@ -281,8 +242,8 @@ public class Puzzle
     {
         if (obj == null || GetType() != obj.GetType())
             return false;
-        
-        var other = (Puzzle) obj;
+
+        var other = (Puzzle)obj;
         var otherStr = other.ToString();
 
         return otherStr.Equals(ToString());

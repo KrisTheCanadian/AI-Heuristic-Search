@@ -3,13 +3,13 @@ using Eight_puzzle.Utils.Search.Interfaces;
 
 namespace Eight_puzzle.Utils.Search.Strategies;
 
-public class BreadthFirstSearch: ISearchStrategy
+public class BreadthFirstSearch : ISearchStrategy
 {
     public List<Puzzle> Search(Puzzle puzzle)
     {
         var goalState = Puzzle.GetGoalState();
-        if(puzzle.Equals(goalState)) return new List<Puzzle> {puzzle};
-        
+        if (puzzle.Equals(goalState)) return new List<Puzzle> { puzzle };
+
         var queue = new Queue<Puzzle>();
         var visited = new HashSet<string>();
         var path = new List<Puzzle>();
@@ -26,6 +26,7 @@ public class BreadthFirstSearch: ISearchStrategy
                     path.Insert(0, current.Parent);
                     current = current.Parent;
                 }
+
                 return path;
             }
 
@@ -36,8 +37,8 @@ public class BreadthFirstSearch: ISearchStrategy
                 visited.Add(current.ToString());
                 queue.Enqueue(child);
             }
-            
         }
+
         return path;
     }
 }

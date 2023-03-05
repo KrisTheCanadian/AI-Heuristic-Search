@@ -5,13 +5,13 @@ namespace Eight_puzzle.Utils.Search;
 
 public class SearchContext
 {
-    private ISearchStrategy SearchStrategy { get; set; }
-    
     public SearchContext(ISearchStrategy searchStrategy)
     {
         SearchStrategy = searchStrategy;
     }
-    
+
+    private ISearchStrategy SearchStrategy { get; }
+
     public List<Puzzle> Search(Puzzle puzzle)
     {
         return SearchStrategy.Search(puzzle);

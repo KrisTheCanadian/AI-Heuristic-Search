@@ -10,15 +10,9 @@ public class HammingDistanceStrategy : IHeuristicStrategy
         var distance = 0;
         var goalState = Puzzle.GetGoalState();
         for (var i = 0; i < 3; i++)
-        {
-            for (var j = 0; j < 3; j++)
-            {
-                if (puzzle.Board[i][j] != goalState.Board[i][j])
-                {
-                    distance++;
-                }
-            }
-        }
+        for (var j = 0; j < 3; j++)
+            if (puzzle.Board[i][j] != goalState.Board[i][j])
+                distance++;
         return distance;
     }
 }

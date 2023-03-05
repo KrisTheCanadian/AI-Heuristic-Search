@@ -1,5 +1,12 @@
-﻿using Numberlink_puzzle.Model;
+﻿using System.Diagnostics;
+using Numberlink_puzzle.Heuristics;
+using Numberlink_puzzle.Heuristics.Interfaces;
+using Numberlink_puzzle.Heuristics.Strategies;
+using Numberlink_puzzle.Model;
+using Numberlink_puzzle.Search.Interfaces;
+using Numberlink_puzzle.Search.Strategies;
 
+Console.WriteLine("Numberlink");
 Console.WriteLine("Enter the number of rows: ");
 var rows = int.Parse(Console.ReadLine()!);
 Console.WriteLine("Enter the number of columns: ");
@@ -14,31 +21,77 @@ var grid = new int[rows, columns];
 var input = Console.ReadLine()!.Split(' ');
 var index = 0;
 for (var i = 0; i < rows; i++)
+for (var j = 0; j < columns; j++)
 {
-    for (var j = 0; j < columns; j++)
-    {
-        grid[i, j] = int.Parse(input[index]);
-        index++;
-    }
+    grid[i, j] = int.Parse(input[index]);
+    index++;
 }
 
 var puzzle = new Puzzle(rows, columns, grid);
 
-if (!puzzle.IsValidFirstPuzzle())
-{
-    Console.WriteLine("The puzzle is not valid!");
-    return;
-}
+// if (!puzzle.IsValidFirstPuzzle())
+// {
+//     Console.WriteLine("The puzzle is not valid!");
+//     return;
+// }
 
 Console.WriteLine();
 Console.WriteLine("The puzzle is valid: " + puzzle.IsValidFirstPuzzle());
 Console.WriteLine("The number of paths is: " + puzzle.PathsCount);
 Console.WriteLine("Puzzle: \n" + puzzle);
 
-Console.WriteLine("Puzzle Successors: ");
-var successors = puzzle.GetSuccessorStates();
+// TODO: Check if the puzzle is solvable
+Console.WriteLine("1. Best-first search");
+Console.WriteLine("2. A* search");
+Console.Write("Enter the search strategy: ");
 
-foreach (var successor in successors)
+var searchStrategy = Console.ReadLine();
+Console.WriteLine();
+
+if (searchStrategy == null) throw new Exception("Invalid input");
+
+var strategy = int.Parse(searchStrategy);
+
+// if option 3 or 4 is chosen, ask the user for the heuristic function
+
+HeuristicContext? heuristicContext = null;
+
+Console.WriteLine("1. Linear conflicts heuristic");
+Console.WriteLine("2. Double Manhattan distance heuristic (InAdmissible)");
+Console.Write("Enter the heuristic function: ");
+
+searchStrategy = Console.ReadLine();
+Console.WriteLine();
+
+if (searchStrategy == null) throw new Exception("Invalid input");
+
+var heuristic = int.Parse(searchStrategy);
+
+// create the heuristic strategy
+IHeuristicStrategy? heuristicStrategy = heuristic switch
 {
-    Console.WriteLine(successor);
-}
+    1 => new AdmissibleHeuristicStrategy(),
+    2 => new NonAdmissibleHeuristicStrategy(),
+    _ => throw new Exception("Invalid input")
+};
+
+heuristicContext = new HeuristicContext(heuristicStrategy);
+
+// create the search strategy
+ISearchStrategy search = strategy switch
+{
+    1 => new BestFirstSearch(heuristicContext!),
+    2 => new AStarSearch(heuristicContext!),
+    _ => throw new Exception("Invalid input")
+};
+
+// start timer 
+var watch = Stopwatch.StartNew();
+watch.Start();
+
+var solution = search.Search(puzzle);
+
+watch.Stop();
+
+Console.WriteLine("Solution: \n" + solution);
+Console.WriteLine("Time elapsed: " + watch.ElapsedMilliseconds + " ms");

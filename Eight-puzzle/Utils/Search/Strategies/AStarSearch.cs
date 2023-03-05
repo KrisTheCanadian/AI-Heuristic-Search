@@ -2,57 +2,57 @@ using Eight_puzzle.Models;
 using Eight_puzzle.Utils.Heuristics;
 using Eight_puzzle.Utils.Search.Interfaces;
 
-namespace Eight_puzzle.Utils.Search.Strategies
+namespace Eight_puzzle.Utils.Search.Strategies;
+
+public class AStarSearch : ISearchStrategy
 {
-    public class AStarSearch : ISearchStrategy
+    private readonly HeuristicContext _heuristicContext;
+
+    public AStarSearch(HeuristicContext heuristicContext)
     {
-        private readonly HeuristicContext _heuristicContext;
+        _heuristicContext = heuristicContext;
+    }
 
-        public AStarSearch(HeuristicContext heuristicContext)
+    public List<Puzzle> Search(Puzzle puzzle)
+    {
+        var goalState = Puzzle.GetGoalState();
+        if (puzzle.Equals(goalState)) return new List<Puzzle> { puzzle };
+
+        var frontier = new PriorityQueue<Puzzle, int>();
+        frontier.Enqueue(puzzle, _heuristicContext.GetHeuristicValue(puzzle));
+
+        var cameFrom = new Dictionary<Puzzle, Puzzle?>();
+        var costSoFar = new Dictionary<Puzzle, int>();
+        cameFrom[puzzle] = null;
+        costSoFar[puzzle] = _heuristicContext.GetHeuristicValue(puzzle);
+
+        while (frontier.Count > 0)
         {
-            _heuristicContext = heuristicContext;
-        }
+            var current = frontier.Dequeue();
 
-        public List<Puzzle> Search(Puzzle puzzle)
-        {
-            var goalState = Puzzle.GetGoalState();
-            if (puzzle.Equals(goalState)) return new List<Puzzle> { puzzle };
-
-            var frontier = new PriorityQueue<Puzzle, int>();
-            frontier.Enqueue(puzzle, _heuristicContext.GetHeuristicValue(puzzle));
-
-            var cameFrom = new Dictionary<Puzzle, Puzzle?>();
-            var costSoFar = new Dictionary<Puzzle, int>();
-            cameFrom[puzzle] = null;
-            costSoFar[puzzle] = _heuristicContext.GetHeuristicValue(puzzle);
-
-            while (frontier.Count > 0)
+            if (current.Equals(goalState))
             {
-                var current = frontier.Dequeue();
-
-                if (current.Equals(goalState))
+                var path = new List<Puzzle> { current };
+                while (current != null && cameFrom.ContainsKey(current))
                 {
-                    var path = new List<Puzzle> { current };
-                    while (current != null && cameFrom.ContainsKey(current))
-                    {
-                        current = cameFrom[current];
-                        if (current != null) path.Insert(0, current);
-                    }
-                    return path;
+                    current = cameFrom[current];
+                    if (current != null) path.Insert(0, current);
                 }
 
-                var children = current.GetChildren();
-                foreach (var child in children)
-                {
-                    var newCost = costSoFar[current] + 1;
-                    if (costSoFar.ContainsKey(child) && newCost >= costSoFar[child]) continue;
-                    costSoFar[child] = newCost;
-                    frontier.Enqueue(child, newCost + _heuristicContext.GetHeuristicValue(child));
-                    cameFrom[child] = current;
-                }
+                return path;
             }
 
-            return new List<Puzzle>();
+            var children = current.GetChildren();
+            foreach (var child in children)
+            {
+                var newCost = costSoFar[current] + 1;
+                if (costSoFar.ContainsKey(child) && newCost >= costSoFar[child]) continue;
+                costSoFar[child] = newCost;
+                frontier.Enqueue(child, newCost + _heuristicContext.GetHeuristicValue(child));
+                cameFrom[child] = current;
+            }
         }
+
+        return new List<Puzzle>();
     }
 }

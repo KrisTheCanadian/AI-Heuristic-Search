@@ -10,13 +10,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Heuristics\Strategies" />
+      <PackageReference Include="System.IO.Hashing" Version="7.0.0" />
     </ItemGroup>
 
 </Project>

@@ -4,5 +4,5 @@ namespace Numberlink_puzzle.Search.Interfaces;
 
 public interface ISearchStrategy
 {
-    List<Puzzle> Search(Puzzle puzzle);
+    Puzzle? Search(Puzzle puzzle);
 }
