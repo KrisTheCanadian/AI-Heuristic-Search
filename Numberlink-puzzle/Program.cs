@@ -29,11 +29,11 @@ for (var j = 0; j < columns; j++)
 
 var puzzle = new Puzzle(rows, columns, grid);
 
-// if (!puzzle.IsValidFirstPuzzle())
-// {
-//     Console.WriteLine("The puzzle is not valid!");
-//     return;
-// }
+if (!puzzle.IsValidFirstPuzzle())
+{
+    Console.WriteLine("The puzzle is not valid!");
+    return;
+}
 
 Console.WriteLine();
 Console.WriteLine("The puzzle is valid: " + puzzle.IsValidFirstPuzzle());
