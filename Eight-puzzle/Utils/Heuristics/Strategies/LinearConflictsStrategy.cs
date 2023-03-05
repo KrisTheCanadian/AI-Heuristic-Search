@@ -28,8 +28,6 @@ public class LinearConflictsStrategy : IHeuristicStrategy
                 }
         }
 
-        var manhattan = new ManhattanDistanceStrategy().GetHeuristicValue(puzzle);
-
-        return manhattan + conflicts;
+        return conflicts;
     }
 }
