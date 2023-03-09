@@ -19,6 +19,7 @@ public class Puzzle
     public int PathsCount { get; set; }
     public Puzzle? Parent { get; set; }
 
+    // Counts number of paths in the puzzle
     private int CountPaths()
     {
         var count = 0;
@@ -31,9 +32,13 @@ public class Puzzle
 
         return count;
     }
-
+    
+    
+    // checks if the puzzle is solved
     public bool IsSolved()
     {
+        
+        // checks if all the paths can still be connected
         var maxNumber = Grid.Cast<int>().Max();
 
         for (int number = 1; number <= maxNumber; number++)
@@ -54,7 +59,9 @@ public class Puzzle
             {
                 return false;
             }
-
+            
+            
+            // check if path is valid for each pair of cells
             for (int i = 0; i < cellsWithNumber.Count - 1; i++)
             {
                 for (int j = i + 1; j < cellsWithNumber.Count; j++)
@@ -70,6 +77,7 @@ public class Puzzle
         return true;
     }
     
+    // checks if the path between two cells is valid
     private bool IsPathValid((int, int) start, (int, int) end)
     {
         var visited = new bool[Rows, Columns];
@@ -102,6 +110,7 @@ public class Puzzle
         return false;
     }
     
+    // gets neighboring cells
     private List<(int, int)> GetNeighboringCells((int, int) cell, int rows, int columns)
     {
         var result = new List<(int, int)>();
@@ -129,12 +138,9 @@ public class Puzzle
         return result;
     }
 
+    // checks to see if the initial puzzle given (by input) is valid
     public bool IsValidFirstPuzzle()
     {
-        // if the number of paths is odd, the puzzle is not valid
-        if (PathsCount % 2 != 0)
-            return false;
-
         // if there are no paths, the puzzle is not valid
         if (PathsCount == 0)
             return false;
@@ -157,9 +163,12 @@ public class Puzzle
 
         return true;
     }
-
+    
+    // checks to see if the puzzle has duplicates - (more than 2 numbers equal to each other on the board)
+    // (used only for the initial puzzle given by input)
     private bool HasDuplicates()
     {
+        // count the number of times each number appears
         var numbers = new Dictionary<int, int>();
         for (var i = 0; i < Rows; i++)
         for (var j = 0; j < Columns; j++)
@@ -170,22 +179,15 @@ public class Puzzle
                 else
                     numbers.Add(Grid[i, j], 1);
             }
-
-        foreach (var number in numbers)
-        {
-            if (number.Key == 0)
-                continue;
-            if (number.Value > 2)
-                return true;
-        }
-
-        return false;
+        // if any number appears more than twice, the puzzle has duplicates
+        return numbers.Where(number => number.Key != 0).Any(number => number.Value > 2);
     }
 
     public List<Puzzle> GetSuccessorStates()
     {
         var successorStates = new List<Puzzle>();
-
+        
+        // for each possible path/link, find the first cell with blanks, then attempt to move in each direction
         for (var i = 0; i < PathsCount; i++)
         {
             // find first cell with blanks
@@ -206,7 +208,7 @@ public class Puzzle
         return successorStates;
     }
 
-
+    // find all blanks around a cell and return list of the coordinates for the blanks
     private List<(int, int)> FindBlanksAroundCell(int x, int y)
     {
         var blanks = new List<(int, int)>();
@@ -222,7 +224,7 @@ public class Puzzle
         return blanks;
     }
 
-
+    // find the first cell with blanks
     private (int, int) FindFirstCellWithBlanks(int i)
     {
         for (var x = 0; x < Rows; x++)
@@ -241,10 +243,18 @@ public class Puzzle
 
         return (-1, -1);
     }
-
+    
+    // prints the puzzle
     public override string ToString()
     {
         var sb = new StringBuilder();
+        
+        // print the puzzle
+        // Ex:
+        // 1 2 3
+        // 4 5 6
+        // 7 8 0
+        
         for (var i = 0; i < Rows; i++)
         {
             for (var j = 0; j < Columns; j++) sb.Append(Grid[i, j] + " ");
@@ -254,6 +264,8 @@ public class Puzzle
         return sb.ToString();
     }
     
+    
+    // allows us to compare puzzles (without taking irrelevant properties into account)
     public override bool Equals(object? obj)
     {
         if (obj == null || GetType() != obj.GetType())
@@ -264,12 +276,14 @@ public class Puzzle
 
         return otherStr.Equals(ToString());
     }
-
+    
+    // override for the Equals method (just in case we need it)
     protected bool Equals(Puzzle other)
     {
         return other.ToString().Equals(ToString());
     }
-
+    
+    // fixes the sets of puzzles not being able to be compared correctly 
     public override int GetHashCode()
     {
         var crc = new Crc32();
@@ -279,7 +293,8 @@ public class Puzzle
 
         return i;
     }
-
+    
+    // wrapper method for getting the successor states
     public IEnumerable<Puzzle> GetChildren()
     {
         return GetSuccessorStates();

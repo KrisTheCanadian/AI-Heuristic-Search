@@ -9,10 +9,11 @@ namespace Eight_puzzle.Utils.Heuristics.Strategies
         {
             var conflicts = 0;
             var goalState = Puzzle.GetGoalState();
-
-            // Calculate the Manhattan distance for each tile
+            
+            // Check for linear conflicts in the same row
             for (var i = 0; i < 3; i++)
             {
+                // Check for linear conflicts in the same column
                 for (var j = 0; j < 3; j++)
                 {
                     var value = puzzle.Board[i][j];
@@ -35,9 +36,13 @@ namespace Eight_puzzle.Utils.Heuristics.Strategies
             {
                 for (var k = 0; k < 3; k++)
                 {
-                    if (k == j || puzzle.Board[i][k] == 0) continue;
-                    var (x2, y2) = goalState.GetTileCoordinates(puzzle.Board[i][k]);
-                    if (x2 == x && y2 > y)
+                    if (k == j || puzzle.Board[i][k] == 0) continue; 
+                    
+                    // Get the coordinates of the corresponding tile in the goal state
+                    var (x2, y2) = goalState.GetTileCoordinates(puzzle.Board[i][k]); 
+                    
+                    // If the tile is in the same row and to the right of the current tile, it is causing a linear conflict
+                    if (x2 == x && y2 > y) 
                     {
                         conflicts++;
                     }
@@ -50,8 +55,12 @@ namespace Eight_puzzle.Utils.Heuristics.Strategies
                 for (var k = 0; k < 3; k++)
                 {
                     if (k == i || puzzle.Board[k][j] == 0) continue;
-                    var (x2, y2) = goalState.GetTileCoordinates(puzzle.Board[k][j]);
-                    if (y2 == y && x2 > x)
+                    
+                    // Get the coordinates of the corresponding tile in the goal state
+                    var (x2, y2) = goalState.GetTileCoordinates(puzzle.Board[k][j]); 
+                    
+                    // If the tile is in the same column and below the current tile, it is causing a linear conflict
+                    if (y2 == y && x2 > x) 
                     {
                         conflicts++;
                     }

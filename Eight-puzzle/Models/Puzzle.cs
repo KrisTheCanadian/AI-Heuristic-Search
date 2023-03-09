@@ -6,6 +6,7 @@ namespace Eight_puzzle.Models;
 
 public class Puzzle
 {
+    // goal state
     private static Puzzle _goalState = new(new[,]
     {
         { 1, 2, 3 },
@@ -13,6 +14,7 @@ public class Puzzle
         { 7, 8, 0 }
     });
 
+    // private constructor (switched to a factory method instead)
     private Puzzle(int[,] board)
     {
         Board = new List<List<int>>();
@@ -25,9 +27,13 @@ public class Puzzle
         }
     }
 
+    // board is a 2D array of integers
     public List<List<int>> Board { get; }
+    
+    // parent puzzle (null if this is the initial state)
     public Puzzle? Parent { get; set; }
 
+    // factory method (creates a puzzle from a 2D array of integers)
     public static bool CreatePuzzle(out Puzzle puzzle)
     {
         // Read the initial state of the puzzle
@@ -37,6 +43,7 @@ public class Puzzle
 
         var inputArray = input.Split(' ');
 
+        // validate the input (check if it is a valid permutation of the numbers 0-8)
         if (Validator.ValidateInput(inputArray, out var initialState)) throw new Exception("Invalid input");
 
         // create the puzzle
@@ -44,6 +51,7 @@ public class Puzzle
         return false;
     }
 
+    // get the coordinates of a tile in the puzzle
     public (int, int) GetTileCoordinates(int value)
     {
         for (var i = 0; i < 3; i++)
@@ -64,6 +72,7 @@ public class Puzzle
         _goalState = goalState;
     }
 
+    // create successor states of the current puzzle
     private IEnumerable<Puzzle> GetSuccessorStates()
     {
         var successorStates = new List<Puzzle>();
@@ -89,6 +98,7 @@ public class Puzzle
             }
         }
 
+        // move down
         if (blankTile < 6)
         {
             // blank tile is not in the last row
@@ -99,7 +109,8 @@ public class Puzzle
                 successorStates.Add(down);
             }
         }
-
+        
+        // move left
         if (blankTile % 3 != 0)
         {
             // blank tile is not in the first column
@@ -112,6 +123,8 @@ public class Puzzle
         }
 
         if (blankTile % 3 == 2) return successorStates;
+        
+        // move right
         // blank tile is not in the last column
         var right = MoveRight();
         if (right == null) return successorStates;
@@ -121,11 +134,14 @@ public class Puzzle
         return successorStates;
     }
 
+    // wrapper for GetSuccessorStates()
     public IEnumerable<Puzzle> GetChildren()
     {
         return GetSuccessorStates();
     }
 
+    // get the index of the blank tile
+    // used in successor states generation
     private int GetBlankTile()
     {
         for (var i = 0; i < 3; i++)
@@ -136,6 +152,7 @@ public class Puzzle
         return -1;
     }
 
+    // move the blank tile up
     private Puzzle? MoveUp()
     {
         var blankTile = GetBlankTile();
@@ -159,6 +176,7 @@ public class Puzzle
         return new Puzzle(newBoard);
     }
 
+    // move the blank tile down
     private Puzzle? MoveDown()
     {
         var blankTile = GetBlankTile();
@@ -182,6 +200,7 @@ public class Puzzle
         return new Puzzle(newBoard);
     }
 
+    // move the blank tile left
     private Puzzle? MoveLeft()
     {
         var blankTile = GetBlankTile();
@@ -201,6 +220,7 @@ public class Puzzle
         return new Puzzle(newBoard);
     }
 
+    // move the blank tile right
     private Puzzle? MoveRight()
     {
         var blankTile = GetBlankTile();
@@ -238,6 +258,7 @@ public class Puzzle
         return sb.ToString();
     }
 
+    // check only puzzle state for equality
     public override bool Equals(object? obj)
     {
         if (obj == null || GetType() != obj.GetType())
@@ -249,11 +270,13 @@ public class Puzzle
         return otherStr.Equals(ToString());
     }
 
+    // override the equals operator
     protected bool Equals(Puzzle other)
     {
         return other.ToString().Equals(ToString());
     }
-
+    
+    // fixes the hashcode collision problem for sets
     public override int GetHashCode()
     {
         var crc = new Crc32();
@@ -262,10 +285,5 @@ public class Puzzle
         var i = BitConverter.ToInt32(hash, 0);
 
         return i;
-    }
-
-    public int GetBlankTileRow()
-    {
-        return GetBlankTile() / 3;
     }
 }

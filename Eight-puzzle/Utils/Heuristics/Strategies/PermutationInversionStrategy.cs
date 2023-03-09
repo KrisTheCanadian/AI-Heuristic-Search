@@ -17,7 +17,10 @@ public class PermutationInversionStrategy : IHeuristicStrategy
         // Convert 2d array to 1d array
         var goalState = goalState2d.SelectMany(x => x).ToArray();
 
+        
         var count = 0;
+        
+        // Count the number of inversions
         for (var i = 0; i < 9; i++)
         for (var j = i + 1; j < 9; j++)
             if (state[j] != 0 && state[i] != 0)

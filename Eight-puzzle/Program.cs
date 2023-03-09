@@ -8,10 +8,12 @@ using Eight_puzzle.Utils.Search;
 using Eight_puzzle.Utils.Search.Interfaces;
 using Eight_puzzle.Utils.Search.Strategies;
 
+// Description
 Console.WriteLine("Eight-puzzle");
 Console.WriteLine("Enter the initial state of the puzzle:");
 Console.WriteLine("Enter the numbers 0-8, where 0 represents the blank tile, separated by spaces:");
 
+// Create the puzzle given, exception is thrown if the puzzle is invalid
 if (Puzzle.CreatePuzzle(out var puzzle)) return;
 Console.WriteLine("Initial state:");
 Console.WriteLine(puzzle);
@@ -19,10 +21,12 @@ Console.WriteLine(puzzle);
 Console.WriteLine("Enter the desired/goal state of the puzzle:");
 Console.WriteLine("Enter the numbers 0-8, where 0 represents the blank tile, separated by spaces:");
 
+// Create the goal state given, exception is thrown if the puzzle is invalid
 if (Puzzle.CreatePuzzle(out var goalState)) return;
 Console.WriteLine("Goal state:");
 Console.WriteLine(goalState);
 
+// set the goal state (this is used for the heuristic functions)
 Puzzle.SetGoalState(goalState);
 
 // ask the user for the search strategy
@@ -32,6 +36,7 @@ Console.WriteLine("3. Best-first search");
 Console.WriteLine("4. A* search");
 Console.Write("Enter the search strategy: ");
 
+// get the search strategy
 var input = Console.ReadLine();
 Console.WriteLine();
 
@@ -43,6 +48,7 @@ var strategy = int.Parse(input);
 
 HeuristicContext? heuristicContext = null;
 
+// get the heuristic function if the strategy is 3 or 4
 if (input is "3" or "4")
 {
     Console.WriteLine("1. Hamming distance");
@@ -101,11 +107,16 @@ watch.Start();
 // search for the solution
 var solution = searchContext.Search(puzzle);
 
+// stop the timer
 watch.Stop();
 
 // print the solution
 Console.WriteLine("Solution:");
 foreach (var state in solution) Console.WriteLine(state);
 
+
+// output
 Console.WriteLine($"Number of moves: {solution.Count - 1}");
 Console.WriteLine($"Time taken: {watch.ElapsedMilliseconds} ms");
+Console.WriteLine($"Path cost: {solution.Count}");
+Console.WriteLine($"Memory used: {GC.GetTotalMemory(false) / 1024 / 1024} MB");

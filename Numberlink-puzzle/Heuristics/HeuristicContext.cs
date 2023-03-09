@@ -5,12 +5,12 @@ namespace Numberlink_puzzle.Heuristics;
 
 public class HeuristicContext
 {
+    private IHeuristicStrategy HeuristicStrategy { get; }
+    
     public HeuristicContext(IHeuristicStrategy heuristicStrategy)
     {
         HeuristicStrategy = heuristicStrategy;
     }
-
-    private IHeuristicStrategy HeuristicStrategy { get; }
 
     public int GetHeuristicValue(Puzzle puzzle)
     {

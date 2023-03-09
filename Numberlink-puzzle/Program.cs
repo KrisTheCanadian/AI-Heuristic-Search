@@ -3,7 +3,7 @@ using Numberlink_puzzle.Heuristics;
 using Numberlink_puzzle.Heuristics.Interfaces;
 using Numberlink_puzzle.Heuristics.Strategies;
 using Numberlink_puzzle.Model;
-using Numberlink_puzzle.Search.Interfaces;
+using Numberlink_puzzle.Search;
 using Numberlink_puzzle.Search.Strategies;
 
 Console.WriteLine("Numberlink");
@@ -40,7 +40,7 @@ Console.WriteLine("The puzzle is valid: " + puzzle.IsValidFirstPuzzle());
 Console.WriteLine("The number of paths is: " + puzzle.PathsCount);
 Console.WriteLine("Puzzle: \n" + puzzle);
 
-// TODO: Check if the puzzle is solvable
+
 Console.WriteLine("1. Best-first search");
 Console.WriteLine("2. A* search");
 Console.Write("Enter the search strategy: ");
@@ -77,21 +77,23 @@ IHeuristicStrategy? heuristicStrategy = heuristic switch
 
 heuristicContext = new HeuristicContext(heuristicStrategy);
 
-// create the search strategy
-ISearchStrategy search = strategy switch
-{
-    1 => new BestFirstSearch(heuristicContext!),
-    2 => new AStarSearch(heuristicContext!),
-    _ => throw new Exception("Invalid input")
-};
+// create the search context (strategy pattern)
+var searchContext = new SearchContext(strategy switch
+    {
+        1 => new BestFirstSearch(heuristicContext!),
+        2 => new AStarSearch(heuristicContext!),
+        _ => throw new Exception("Invalid input")
+    });
 
 // start timer 
 var watch = Stopwatch.StartNew();
 watch.Start();
 
-var solution = search.Search(puzzle);
+// search for the solution (According to the chosen strategy)
+var solution = searchContext.Search(puzzle);
 
 watch.Stop();
 
 Console.WriteLine("Solution: \n" + solution);
 Console.WriteLine("Time elapsed: " + watch.ElapsedMilliseconds + " ms");
+Console.WriteLine($"Memory used: {GC.GetTotalMemory(false) / 1024 / 1024} MB");

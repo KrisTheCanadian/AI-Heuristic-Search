@@ -10,6 +10,8 @@ public class ManhattanDistanceStrategy : IHeuristicStrategy
         var goalState = Puzzle.GetGoalState();
         var distance = 0;
 
+        // Manhattan distance
+        // for each tile, calculate the distance to the goal state (for that tile) and add it to the total distance
         for (var i = 0; i < 3; i++)
         for (var j = 0; j < 3; j++)
         {
