@@ -1,5 +1,6 @@
 using Eight_puzzle.Models;
 using Eight_puzzle.Utils.Heuristics.Interfaces;
+using System.Collections.Generic;
 
 namespace Eight_puzzle.Utils.Heuristics.Strategies
 {
@@ -29,7 +30,7 @@ namespace Eight_puzzle.Utils.Heuristics.Strategies
                 }
             }
 
-            return conflicts * 2;
+            return conflicts;
         }
 
         private static int GetRowConflicts(Puzzle puzzle, List<List<int>> goalState, int row, int col, int goalCol)
@@ -67,7 +68,7 @@ namespace Eight_puzzle.Utils.Heuristics.Strategies
 
                 if (goalK <= goalRow && k > row || goalK >= goalRow && k < row)
                 {
-                    if (goalState[puzzle.Board[k][col] / puzzle.Board.Count][col] != 0)
+                    if (goalK >= 0 && goalK < puzzle.Board.Count && goalState[goalK][col] != 0)
                     {
                         conflicts++;
                     }
