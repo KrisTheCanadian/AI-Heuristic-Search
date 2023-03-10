@@ -16,4 +16,9 @@ public class SearchContext
     {
         return SearchStrategy.Search(puzzle);
     }
+
+    public long GetExpandedNodes()
+    {
+        return SearchStrategy.ExpandedNodes;
+    }
 }

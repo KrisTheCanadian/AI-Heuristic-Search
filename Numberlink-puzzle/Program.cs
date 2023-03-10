@@ -54,8 +54,6 @@ var strategy = int.Parse(searchStrategy);
 
 // if option 3 or 4 is chosen, ask the user for the heuristic function
 
-HeuristicContext? heuristicContext = null;
-
 Console.WriteLine("1. Linear conflicts heuristic");
 Console.WriteLine("2. Double Manhattan distance heuristic (InAdmissible)");
 Console.Write("Enter the heuristic function: ");
@@ -75,7 +73,7 @@ IHeuristicStrategy? heuristicStrategy = heuristic switch
     _ => throw new Exception("Invalid input")
 };
 
-heuristicContext = new HeuristicContext(heuristicStrategy);
+var heuristicContext = new HeuristicContext(heuristicStrategy);
 
 // create the search context (strategy pattern)
 var searchContext = new SearchContext(strategy switch
@@ -95,4 +93,5 @@ var solution = searchContext.Search(puzzle);
 watch.Stop();
 
 Console.WriteLine("Solution: \n" + solution);
+Console.WriteLine("Number of expanded nodes: " + searchContext.GetExpandedNodes());
 Console.WriteLine("Time elapsed: " + watch.ElapsedMilliseconds + " ms");

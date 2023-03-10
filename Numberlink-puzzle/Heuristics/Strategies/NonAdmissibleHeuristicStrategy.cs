@@ -7,6 +7,9 @@ public class NonAdmissibleHeuristicStrategy : IHeuristicStrategy
 {
     public int GetHeuristicValue(Puzzle puzzle)
     {
-        throw new NotImplementedException();
+        IHeuristicStrategy strategy = new AdmissibleHeuristicStrategy();
+        var value = strategy.GetHeuristicValue(puzzle);
+        if(value == int.MaxValue) { return int.MaxValue; }
+        return value * 2;
     }
 }

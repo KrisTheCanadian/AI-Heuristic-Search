@@ -13,6 +13,8 @@ public class AStarSearch : ISearchStrategy
         _heuristicContext = heuristicContext;
     }
 
+    public long ExpandedNodes { get; set; }
+
     public Puzzle? Search(Puzzle puzzle)
     {
         
@@ -35,7 +37,13 @@ public class AStarSearch : ISearchStrategy
             var current = frontier.Dequeue();
             
             // check to see if the current node is the goal
-            if (current.IsSolved()) { return current; }
+            if (current.IsSolved())
+            {
+                // set the number of expanded nodes
+                ExpandedNodes = costSoFar.Count + 1;
+                
+                return current;
+            }
             
             // get successors of the current node
             var children = current.GetChildren();
@@ -66,6 +74,9 @@ public class AStarSearch : ISearchStrategy
                 frontier.Enqueue(child, newCost);
             }
         }
+        
+        // set the number of expanded nodes
+        ExpandedNodes = costSoFar.Count;
         
         // if the frontier is empty, return null (no solution)
         return null;

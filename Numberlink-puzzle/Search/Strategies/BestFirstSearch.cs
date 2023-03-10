@@ -13,6 +13,8 @@ public class BestFirstSearch : ISearchStrategy
         _heuristicContext = heuristicContext;
     }
 
+    public long ExpandedNodes { get; set; }
+
     public Puzzle? Search(Puzzle puzzle)
     {
         // if the puzzle is already solved, return the puzzle
@@ -31,7 +33,13 @@ public class BestFirstSearch : ISearchStrategy
             var current = openList.Dequeue();
             
             // check to see if the current node is the goal
-            if (current.IsSolved()) { return current; }
+            if (current.IsSolved())
+            {
+                // set the number of expanded nodes
+                ExpandedNodes = closedList.Count + 1;
+                
+                return current;
+            }
             
             // get successors of the current node
             var children = current.GetChildren();
@@ -57,6 +65,9 @@ public class BestFirstSearch : ISearchStrategy
             // add the current node to the closed list
             closedList.Add(current);
         }
+        
+        // set the number of expanded nodes
+        ExpandedNodes = closedList.Count;
         
         // if the open list is empty, return null (no solution)
         return null;
