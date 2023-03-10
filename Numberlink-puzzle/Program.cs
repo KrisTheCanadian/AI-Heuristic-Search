@@ -96,4 +96,3 @@ watch.Stop();
 
 Console.WriteLine("Solution: \n" + solution);
 Console.WriteLine("Time elapsed: " + watch.ElapsedMilliseconds + " ms");
-Console.WriteLine($"Memory used: {GC.GetTotalMemory(false) / 1024 / 1024} MB");

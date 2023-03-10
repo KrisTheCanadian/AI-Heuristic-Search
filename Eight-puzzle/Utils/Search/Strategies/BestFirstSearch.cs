@@ -7,6 +7,8 @@ namespace Eight_puzzle.Utils.Search.Strategies;
 public class BestFirstSearch : ISearchStrategy
 {
     private readonly HeuristicContext _heuristicContext;
+    
+    public long NodesExpanded { get; set; }
 
     public BestFirstSearch(HeuristicContext heuristicContext)
     {
@@ -40,6 +42,9 @@ public class BestFirstSearch : ISearchStrategy
                     current = current.Parent;
                     if (current != null) path.Insert(0, current);
                 }
+                
+                // set the number of nodes expanded
+                NodesExpanded = closedList.Count + 1;
 
                 return path;
             }
@@ -67,7 +72,10 @@ public class BestFirstSearch : ISearchStrategy
             // Add the current puzzle to the closed list
             closedList.Add(current);
         }
-
+        
+        // set the number of nodes expanded
+        NodesExpanded = closedList.Count;
+        
         return new List<Puzzle>();
     }
 }

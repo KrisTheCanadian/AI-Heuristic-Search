@@ -5,6 +5,10 @@ namespace Eight_puzzle.Utils.Search.Strategies;
 
 public class DepthFirstSearch : ISearchStrategy
 {
+    
+    public long NodesExpanded { get; set; }
+    
+    
     public List<Puzzle> Search(Puzzle puzzle)
     {
         
@@ -37,6 +41,9 @@ public class DepthFirstSearch : ISearchStrategy
                     path.Insert(0, current.Parent);
                     current = current.Parent;
                 }
+                
+                // set the number of nodes expanded
+                NodesExpanded = visited.Count + 1;
 
                 return path;
             }
@@ -52,6 +59,9 @@ public class DepthFirstSearch : ISearchStrategy
                 stack.Push(child);
             }
         }
+        
+        // set the number of nodes expanded
+        NodesExpanded = visited.Count;
 
         return path;
     }

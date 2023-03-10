@@ -5,6 +5,9 @@ namespace Eight_puzzle.Utils.Search.Strategies;
 
 public class BreadthFirstSearch : ISearchStrategy
 {
+    
+    public long NodesExpanded { get; set; }
+    
     public List<Puzzle> Search(Puzzle puzzle)
     {
         var goalState = Puzzle.GetGoalState();
@@ -36,6 +39,9 @@ public class BreadthFirstSearch : ISearchStrategy
                     path.Insert(0, current.Parent);
                     current = current.Parent;
                 }
+                
+                // set the number of nodes expanded
+                NodesExpanded = visited.Count + 1;
 
                 return path;
             }
@@ -53,6 +59,9 @@ public class BreadthFirstSearch : ISearchStrategy
                 queue.Enqueue(child);
             }
         }
+        
+        // set the number of nodes expanded
+        NodesExpanded = visited.Count;
 
         return path;
     }

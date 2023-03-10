@@ -116,7 +116,6 @@ foreach (var state in solution) Console.WriteLine(state);
 
 
 // output
-Console.WriteLine($"Number of moves: {solution.Count - 1}");
+Console.WriteLine($"Number of nodes expanded: {searchContext.GetNodesExpanded()}");
+Console.WriteLine($"Solution Path Length: {solution.Count}");
 Console.WriteLine($"Time taken: {watch.ElapsedMilliseconds} ms");
-Console.WriteLine($"Path cost: {solution.Count}");
-Console.WriteLine($"Memory used: {GC.GetTotalMemory(false) / 1024 / 1024} MB");

@@ -7,60 +7,67 @@ namespace Eight_puzzle.Utils.Heuristics.Strategies
     {
         public int GetHeuristicValue(Puzzle puzzle)
         {
-            var conflicts = 0;
             var goalState = Puzzle.GetGoalState();
-            
-            // Check for linear conflicts in the same row
-            for (var i = 0; i < 3; i++)
-            {
-                // Check for linear conflicts in the same column
-                for (var j = 0; j < 3; j++)
-                {
-                    var value = puzzle.Board[i][j];
-                    if (value == 0) continue;
+            var conflicts = 0;
 
-                    var (x, y) = goalState.GetTileCoordinates(value);
-                    conflicts += GetLinearConflicts(puzzle, goalState, i, j, x, y);
+            for (var i = 0; i < puzzle.Board.Count; i++)
+            {
+                for (var j = 0; j < puzzle.Board[i].Count; j++)
+                {
+                    var tile = puzzle.Board[i][j];
+
+                    if (tile == 0) continue;
+
+                    var goalRow = (tile - 1) / puzzle.Board.Count;
+                    var goalCol = (tile - 1) % puzzle.Board[i].Count;
+
+                    if (i != goalRow || j != goalCol)
+                    {
+                        conflicts += GetRowConflicts(puzzle, goalState.Board, i, j, goalCol);
+                        conflicts += GetColConflicts(puzzle, goalState.Board, i, j, goalRow);
+                    }
                 }
             }
 
-            return conflicts;
+            return conflicts * 2;
         }
 
-        private static int GetLinearConflicts(Puzzle puzzle, Puzzle goalState, int i, int j, int x, int y)
+        private static int GetRowConflicts(Puzzle puzzle, List<List<int>> goalState, int row, int col, int goalCol)
         {
             var conflicts = 0;
 
-            // Check for linear conflicts in the same row
-            if (i == x)
+            for (var k = 0; k < puzzle.Board[row].Count; k++)
             {
-                for (var k = 0; k < 3; k++)
+                if (k == col || puzzle.Board[row][k] == 0) continue;
+
+                var goalK = (puzzle.Board[row][k] - 1) % puzzle.Board[row].Count;
+
+                if (goalK <= goalCol && k > col || goalK >= goalCol && k < col)
                 {
-                    if (k == j || puzzle.Board[i][k] == 0) continue; 
-                    
-                    // Get the coordinates of the corresponding tile in the goal state
-                    var (x2, y2) = goalState.GetTileCoordinates(puzzle.Board[i][k]); 
-                    
-                    // If the tile is in the same row and to the right of the current tile, it is causing a linear conflict
-                    if (x2 == x && y2 > y) 
+                    if (goalK >= 0 && goalK < puzzle.Board[row].Count && goalState[row][goalK] != 0)
                     {
                         conflicts++;
                     }
                 }
             }
 
-            // Check for linear conflicts in the same column
-            if (j == y)
+            return conflicts;
+        }
+
+
+        private static int GetColConflicts(Puzzle puzzle, List<List<int>> goalState, int row, int col, int goalRow)
+        {
+            var conflicts = 0;
+
+            for (var k = 0; k < puzzle.Board.Count; k++)
             {
-                for (var k = 0; k < 3; k++)
+                if (k == row || puzzle.Board[k][col] == 0) continue;
+
+                var goalK = (puzzle.Board[k][col] - 1) / puzzle.Board.Count;
+
+                if (goalK <= goalRow && k > row || goalK >= goalRow && k < row)
                 {
-                    if (k == i || puzzle.Board[k][j] == 0) continue;
-                    
-                    // Get the coordinates of the corresponding tile in the goal state
-                    var (x2, y2) = goalState.GetTileCoordinates(puzzle.Board[k][j]); 
-                    
-                    // If the tile is in the same column and below the current tile, it is causing a linear conflict
-                    if (y2 == y && x2 > x) 
+                    if (goalState[puzzle.Board[k][col] / puzzle.Board.Count][col] != 0)
                     {
                         conflicts++;
                     }
