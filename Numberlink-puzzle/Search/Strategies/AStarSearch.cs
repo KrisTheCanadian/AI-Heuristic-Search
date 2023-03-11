@@ -53,6 +53,7 @@ public class AStarSearch : ISearchStrategy
                 // add g(n)
                 var heuristic = _heuristicContext.GetHeuristicValue(child);
                 // f(n) = g(n) + h(n)
+                
                 var newCost = costSoFar[current] + 1 + heuristic;
                 
                 // skip if the heuristic value is int.MaxValue

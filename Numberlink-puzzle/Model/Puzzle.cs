@@ -39,7 +39,7 @@ public class Puzzle
     {
         
         // checks if all the paths can still be connected
-        var maxNumber = Grid.Cast<int>().Max();
+        var maxNumber = PathsCount;
 
         for (int number = 1; number <= maxNumber; number++)
         {
