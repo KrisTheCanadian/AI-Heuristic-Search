@@ -9,13 +9,14 @@ public class SearchContext
     {
         SearchStrategy = searchStrategy;
     }
+
     private ISearchStrategy SearchStrategy { get; }
 
     public List<Puzzle> Search(Puzzle puzzle)
     {
         return SearchStrategy.Search(puzzle);
     }
-    
+
     public long GetNodesExpanded()
     {
         return SearchStrategy.NodesExpanded;

@@ -13,20 +13,16 @@ public class AdmissibleHeuristicStrategy : IHeuristicStrategy
         for (var j = 0; j < puzzle.Columns; j++)
             if (puzzle.Grid[i, j] == 0)
                 zeros++;
-        
+
         return IsRuleViolated(puzzle) ? int.MaxValue : zeros;
     }
 
     private bool IsRuleViolated(Puzzle puzzle)
     {
         // check if all the paths can still be connected
-        for (int i = 0; i < puzzle.PathsCount; i++)
-        {
+        for (var i = 0; i < puzzle.PathsCount; i++)
             if (!CanBeStillConnected(puzzle, i + 1))
-            {
                 return true;
-            }
-        }
 
         return false;
     }
@@ -35,7 +31,7 @@ public class AdmissibleHeuristicStrategy : IHeuristicStrategy
     {
         // get first cell with the target value
         var firstCell = GetFirstCellWithValue(puzzle.Grid, target);
-        
+
         // if the target value is not found, return true
         if (firstCell.Item1 == -1) return true;
 
@@ -44,38 +40,34 @@ public class AdmissibleHeuristicStrategy : IHeuristicStrategy
         var stack = new Stack<(int, int)>();
         stack.Push(firstCell);
         visited[firstCell.Item1, firstCell.Item2] = true;
-        
+
         while (stack.Count > 0)
         {
             var current = stack.Pop();
             var neighboringCellsOfCurrent = GetNeighboringCells(puzzle.Grid, current);
-            
+
             foreach (var cell in neighboringCellsOfCurrent)
             {
                 if (visited[cell.Item1, cell.Item2]) continue;
-                
-                if (puzzle.Grid[cell.Item1, cell.Item2] != target && puzzle.Grid[cell.Item1, cell.Item2] != 0) { continue; }
-                
+
+                if (puzzle.Grid[cell.Item1, cell.Item2] != target && puzzle.Grid[cell.Item1, cell.Item2] != 0) continue;
+
                 visited[cell.Item1, cell.Item2] = true;
                 stack.Push(cell);
             }
         }
-        
+
         // get all the cells with the target value
         var cellsWithTargetValue = new List<(int, int)>();
         for (var i = 0; i < puzzle.Rows; i++)
         for (var j = 0; j < puzzle.Columns; j++)
             if (puzzle.Grid[i, j] == target)
                 cellsWithTargetValue.Add((i, j));
-        
+
         // check if all the cells with the target value are visited
         foreach (var cell in cellsWithTargetValue)
-        {
             if (!visited[cell.Item1, cell.Item2])
-            {
                 return false;
-            }
-        }
         return true;
     }
 

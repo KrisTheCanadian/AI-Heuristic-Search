@@ -29,7 +29,7 @@ public class Puzzle
 
     // board is a 2D array of integers
     public List<List<int>> Board { get; }
-    
+
     // parent puzzle (null if this is the initial state)
     public Puzzle? Parent { get; set; }
 
@@ -109,7 +109,7 @@ public class Puzzle
                 successorStates.Add(down);
             }
         }
-        
+
         // move left
         if (blankTile % 3 != 0)
         {
@@ -123,7 +123,7 @@ public class Puzzle
         }
 
         if (blankTile % 3 == 2) return successorStates;
-        
+
         // move right
         // blank tile is not in the last column
         var right = MoveRight();
@@ -275,7 +275,7 @@ public class Puzzle
     {
         return other.ToString().Equals(ToString());
     }
-    
+
     // fixes the hashcode collision problem for sets
     public override int GetHashCode()
     {

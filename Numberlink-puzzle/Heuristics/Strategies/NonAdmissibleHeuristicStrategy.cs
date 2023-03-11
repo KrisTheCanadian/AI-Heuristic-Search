@@ -9,7 +9,7 @@ public class NonAdmissibleHeuristicStrategy : IHeuristicStrategy
     {
         IHeuristicStrategy strategy = new AdmissibleHeuristicStrategy();
         var value = strategy.GetHeuristicValue(puzzle);
-        if(value == int.MaxValue) { return int.MaxValue; }
+        if (value == int.MaxValue) return int.MaxValue;
         return value * 2;
     }
 }

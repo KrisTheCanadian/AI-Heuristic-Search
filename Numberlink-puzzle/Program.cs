@@ -77,11 +77,11 @@ var heuristicContext = new HeuristicContext(heuristicStrategy);
 
 // create the search context (strategy pattern)
 var searchContext = new SearchContext(strategy switch
-    {
-        1 => new BestFirstSearch(heuristicContext!),
-        2 => new AStarSearch(heuristicContext!),
-        _ => throw new Exception("Invalid input")
-    });
+{
+    1 => new BestFirstSearch(heuristicContext!),
+    2 => new AStarSearch(heuristicContext!),
+    _ => throw new Exception("Invalid input")
+});
 
 // start timer 
 var watch = Stopwatch.StartNew();

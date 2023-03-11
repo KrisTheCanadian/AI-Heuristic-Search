@@ -7,7 +7,7 @@ namespace Eight_puzzle.Utils.Search.Strategies;
 public class BestFirstSearch : ISearchStrategy
 {
     private readonly HeuristicContext _heuristicContext;
-    
+
     public long NodesExpanded { get; set; }
 
     public BestFirstSearch(HeuristicContext heuristicContext)
@@ -42,7 +42,7 @@ public class BestFirstSearch : ISearchStrategy
                     current = current.Parent;
                     if (current != null) path.Insert(0, current);
                 }
-                
+
                 // set the number of nodes expanded
                 NodesExpanded = closedList.Count + 1;
 
@@ -51,20 +51,20 @@ public class BestFirstSearch : ISearchStrategy
 
             // Get the children of the current puzzle
             var children = current.GetChildren();
-            
-            
+
+
             // Add the children to the open list if they are not already in the open list or closed list
             foreach (var child in children)
             {
                 // If the child is already in the closed list, skip it
                 if (closedList.Contains(child)) continue;
-                
+
                 // If the child is already in the open list, skip it
                 if (openList.UnorderedItems.Any(x => x.Element.Equals(child))) continue;
-                
+
                 // Add the child to the open list
                 openList.Enqueue(child, _heuristicContext.GetHeuristicValue(child));
-                
+
                 // Set the parent of the child to the current puzzle
                 child.Parent = current;
             }
@@ -72,10 +72,10 @@ public class BestFirstSearch : ISearchStrategy
             // Add the current puzzle to the closed list
             closedList.Add(current);
         }
-        
+
         // set the number of nodes expanded
         NodesExpanded = closedList.Count;
-        
+
         return new List<Puzzle>();
     }
 }

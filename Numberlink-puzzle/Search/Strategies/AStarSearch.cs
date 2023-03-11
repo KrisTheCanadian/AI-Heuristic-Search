@@ -17,14 +17,13 @@ public class AStarSearch : ISearchStrategy
 
     public Puzzle? Search(Puzzle puzzle)
     {
-        
         // if the puzzle is already solved, return the puzzle
         if (puzzle.IsSolved()) return puzzle;
 
         // create a frontier (open list) and a cost dictionary
         var frontier = new PriorityQueue<Puzzle, int>();
         frontier.Enqueue(puzzle, _heuristicContext.GetHeuristicValue(puzzle));
-        
+
         var costSoFar = new Dictionary<Puzzle, int>
         {
             // f(n) = g(n) + h(n), where g(n) is 0 and h(n) is the heuristic value
@@ -35,45 +34,44 @@ public class AStarSearch : ISearchStrategy
         {
             // get the node with the lowest f(n) value
             var current = frontier.Dequeue();
-            
+
             // check to see if the current node is the goal
             if (current.IsSolved())
             {
                 // set the number of expanded nodes
                 ExpandedNodes = costSoFar.Count + 1;
-                
+
                 return current;
             }
-            
+
             // get successors of the current node
             var children = current.GetChildren();
-            
+
             foreach (var child in children)
             {
                 // add g(n)
                 var heuristic = _heuristicContext.GetHeuristicValue(child);
                 // f(n) = g(n) + h(n)
-                
+
                 var newCost = costSoFar[current] + 1 + heuristic;
-                
+
                 // skip if the heuristic value is int.MaxValue
-                if(heuristic == int.MaxValue) continue; // avoid integer overflow
+                if (heuristic == int.MaxValue) continue; // avoid integer overflow
 
                 // NOTE: we don't need to check if the child is already in the frontier - we assume consistency (which is true for admissible heuristics)
-                
+
                 // update the cost
                 costSoFar[child] = newCost;
-                
+
                 // add the child to the frontier
                 frontier.Enqueue(child, newCost);
             }
         }
-        
+
         // set the number of expanded nodes
         ExpandedNodes = costSoFar.Count;
-        
+
         // if the frontier is empty, return null (no solution)
         return null;
     }
-    
 }

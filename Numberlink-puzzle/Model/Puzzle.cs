@@ -32,51 +32,35 @@ public class Puzzle
 
         return count;
     }
-    
-    
+
+
     // checks if the puzzle is solved
     public bool IsSolved()
     {
-        
         // checks if all the paths can still be connected
         var maxNumber = PathsCount;
 
-        for (int number = 1; number <= maxNumber; number++)
+        for (var number = 1; number <= maxNumber; number++)
         {
             var cellsWithNumber = new List<(int, int)>();
-            for (int i = 0; i < Rows; i++)
-            {
-                for (int j = 0; j < Columns; j++)
-                {
-                    if (Grid[i, j] == number)
-                    {
-                        cellsWithNumber.Add((i, j));
-                    }
-                }
-            }
+            for (var i = 0; i < Rows; i++)
+            for (var j = 0; j < Columns; j++)
+                if (Grid[i, j] == number)
+                    cellsWithNumber.Add((i, j));
 
-            if (cellsWithNumber.Count < 2)
-            {
-                return false;
-            }
-            
-            
+            if (cellsWithNumber.Count < 2) return false;
+
+
             // check if path is valid for each pair of cells
-            for (int i = 0; i < cellsWithNumber.Count - 1; i++)
-            {
-                for (int j = i + 1; j < cellsWithNumber.Count; j++)
-                {
-                    if (!IsPathValid(cellsWithNumber[i], cellsWithNumber[j]))
-                    {
-                        return false;
-                    }
-                }
-            }
+            for (var i = 0; i < cellsWithNumber.Count - 1; i++)
+            for (var j = i + 1; j < cellsWithNumber.Count; j++)
+                if (!IsPathValid(cellsWithNumber[i], cellsWithNumber[j]))
+                    return false;
         }
 
         return true;
     }
-    
+
     // checks if the path between two cells is valid
     private bool IsPathValid((int, int) start, (int, int) end)
     {
@@ -89,51 +73,32 @@ public class Puzzle
         {
             var current = queue.Dequeue();
 
-            if (current == end)
-            {
-                return true;
-            }
+            if (current == end) return true;
 
             visited[current.Item1, current.Item2] = true;
 
             var neighbors = GetNeighboringCells(current, Rows, Columns);
             foreach (var neighbor in neighbors)
-            {
                 if (Grid[neighbor.Item1, neighbor.Item2] == Grid[start.Item1, start.Item2] &&
                     !visited[neighbor.Item1, neighbor.Item2])
-                {
                     queue.Enqueue(neighbor);
-                }
-            }
         }
 
         return false;
     }
-    
+
     // gets neighboring cells
     private List<(int, int)> GetNeighboringCells((int, int) cell, int rows, int columns)
     {
         var result = new List<(int, int)>();
 
-        if (cell.Item1 > 0)
-        {
-            result.Add((cell.Item1 - 1, cell.Item2));
-        }
+        if (cell.Item1 > 0) result.Add((cell.Item1 - 1, cell.Item2));
 
-        if (cell.Item1 < rows - 1)
-        {
-            result.Add((cell.Item1 + 1, cell.Item2));
-        }
+        if (cell.Item1 < rows - 1) result.Add((cell.Item1 + 1, cell.Item2));
 
-        if (cell.Item2 > 0)
-        {
-            result.Add((cell.Item1, cell.Item2 - 1));
-        }
+        if (cell.Item2 > 0) result.Add((cell.Item1, cell.Item2 - 1));
 
-        if (cell.Item2 < columns - 1)
-        {
-            result.Add((cell.Item1, cell.Item2 + 1));
-        }
+        if (cell.Item2 < columns - 1) result.Add((cell.Item1, cell.Item2 + 1));
 
         return result;
     }
@@ -163,7 +128,7 @@ public class Puzzle
 
         return true;
     }
-    
+
     // checks to see if the puzzle has duplicates - (more than 2 numbers equal to each other on the board)
     // (used only for the initial puzzle given by input)
     private bool HasDuplicates()
@@ -179,6 +144,7 @@ public class Puzzle
                 else
                     numbers.Add(Grid[i, j], 1);
             }
+
         // if any number appears more than twice, the puzzle has duplicates
         return numbers.Where(number => number.Key != 0).Any(number => number.Value > 2);
     }
@@ -186,7 +152,7 @@ public class Puzzle
     public List<Puzzle> GetSuccessorStates()
     {
         var successorStates = new List<Puzzle>();
-        
+
         // for each possible path/link, find the first cell with blanks, then attempt to move in each direction
         for (var i = 0; i < PathsCount; i++)
         {
@@ -243,18 +209,18 @@ public class Puzzle
 
         return (-1, -1);
     }
-    
+
     // prints the puzzle
     public override string ToString()
     {
         var sb = new StringBuilder();
-        
+
         // print the puzzle
         // Ex:
         // 1 2 3
         // 4 5 6
         // 7 8 0
-        
+
         for (var i = 0; i < Rows; i++)
         {
             for (var j = 0; j < Columns; j++) sb.Append(Grid[i, j] + " ");
@@ -263,8 +229,8 @@ public class Puzzle
 
         return sb.ToString();
     }
-    
-    
+
+
     // allows us to compare puzzles (without taking irrelevant properties into account)
     public override bool Equals(object? obj)
     {
@@ -276,13 +242,13 @@ public class Puzzle
 
         return otherStr.Equals(ToString());
     }
-    
+
     // override for the Equals method (just in case we need it)
     protected bool Equals(Puzzle other)
     {
         return other.ToString().Equals(ToString());
     }
-    
+
     // fixes the sets of puzzles not being able to be compared correctly 
     public override int GetHashCode()
     {
@@ -293,7 +259,7 @@ public class Puzzle
 
         return i;
     }
-    
+
     // wrapper method for getting the successor states
     public IEnumerable<Puzzle> GetChildren()
     {
