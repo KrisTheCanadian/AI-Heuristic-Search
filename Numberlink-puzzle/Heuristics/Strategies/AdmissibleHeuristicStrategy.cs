@@ -33,41 +33,63 @@ public class AdmissibleHeuristicStrategy : IHeuristicStrategy
 
     private bool CanBeStillConnected(Puzzle puzzle, int target)
     {
-        var tempGrid = puzzle.Grid.Clone() as int[,] ?? throw new InvalidOperationException();
+        // get first cell with the target value
+        var firstCell = GetFirstCellWithValue(puzzle.Grid, target);
+        
+        // if the target value is not found, return true
+        if (firstCell.Item1 == -1) return true;
 
-        // Find all cells with the target value
-        var cellsWithTarget = new List<(int, int)>();
-        for (int i = 0; i < puzzle.Rows; i++)
+        // do dfs to check if all the cells can be reached are equal to target or 0
+        var visited = new bool[puzzle.Rows, puzzle.Columns];
+        var stack = new Stack<(int, int)>();
+        stack.Push(firstCell);
+        visited[firstCell.Item1, firstCell.Item2] = true;
+        
+        while (stack.Count > 0)
         {
-            for (int j = 0; j < puzzle.Columns; j++)
+            var current = stack.Pop();
+            var neighboringCellsOfCurrent = GetNeighboringCells(puzzle.Grid, current);
+            
+            foreach (var cell in neighboringCellsOfCurrent)
             {
-                if (tempGrid[i, j] == target)
-                {
-                    cellsWithTarget.Add((i, j));
-                }
+                if (visited[cell.Item1, cell.Item2]) continue;
+                
+                if (puzzle.Grid[cell.Item1, cell.Item2] != target && puzzle.Grid[cell.Item1, cell.Item2] != 0) { continue; }
+                
+                visited[cell.Item1, cell.Item2] = true;
+                stack.Push(cell);
             }
         }
-
-        // For each cell with the target value, check if it is connected to any other cell with the target value
-        while (cellsWithTarget.Count > 0)
+        
+        // get all the cells with the target value
+        var cellsWithTargetValue = new List<(int, int)>();
+        for (var i = 0; i < puzzle.Rows; i++)
+        for (var j = 0; j < puzzle.Columns; j++)
+            if (puzzle.Grid[i, j] == target)
+                cellsWithTargetValue.Add((i, j));
+        
+        // check if all the cells with the target value are visited
+        foreach (var cell in cellsWithTargetValue)
         {
-            var cell = cellsWithTarget[0];
-            cellsWithTarget.RemoveAt(0);
-
-            // Check if the cell is connected to any neighboring cells with the same number
-            if (!IsCellConnected(tempGrid, cell))
+            if (!visited[cell.Item1, cell.Item2])
             {
                 return false;
             }
-
-            // Update cellsWithTarget to remove cells that have already been checked
-            cellsWithTarget.RemoveAll(c => IsCellConnected(tempGrid, c));
         }
-
         return true;
     }
 
-    
+    private (int, int) GetFirstCellWithValue(int[,] puzzleGrid, int target)
+    {
+        for (var i = 0; i < puzzleGrid.GetLength(0); i++)
+        for (var j = 0; j < puzzleGrid.GetLength(1); j++)
+            if (puzzleGrid[i, j] == target)
+                return (i, j);
+
+        return (-1, -1);
+    }
+
+
     private List<(int, int)> GetNeighboringCells(int[,] grid, (int, int) cell)
     {
         var rows = grid.GetLength(0);
@@ -85,21 +107,4 @@ public class AdmissibleHeuristicStrategy : IHeuristicStrategy
 
         return neighboringCells;
     }
-
-
-    private bool IsCellConnected(int[,] grid, (int, int) cell)
-    {
-        var neighbors = GetNeighboringCells(grid, cell);
-        foreach (var neighbor in neighbors)
-        {
-            if (grid[neighbor.Item1, neighbor.Item2] == grid[cell.Item1, cell.Item2] || grid[neighbor.Item1, neighbor.Item2] == 0)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
 }
