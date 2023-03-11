@@ -58,13 +58,6 @@ public class AStarSearch : ISearchStrategy
                 
                 // skip if the heuristic value is int.MaxValue
                 if(heuristic == int.MaxValue) continue; // avoid integer overflow
-                
-                // if the cost is less, update the cost and add the child to the frontier
-                if (!costSoFar.ContainsKey(child) || newCost < costSoFar[child])
-                {
-                    costSoFar[child] = newCost;
-                    frontier.Enqueue(child, newCost);
-                }
 
                 // NOTE: we don't need to check if the child is already in the frontier - we assume consistency (which is true for admissible heuristics)
                 
