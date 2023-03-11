@@ -37,7 +37,7 @@ public class AStarSearch : ISearchStrategy
             var current = frontier.Dequeue();
             
             // check to see if the current node is the goal
-            if (current.IsSolved())
+            if (current.IsSolved() && _heuristicContext.GetHeuristicValue(current) == 0)
             {
                 // set the number of expanded nodes
                 ExpandedNodes = costSoFar.Count + 1;
@@ -53,7 +53,7 @@ public class AStarSearch : ISearchStrategy
                 // add g(n)
                 var heuristic = _heuristicContext.GetHeuristicValue(child);
                 // f(n) = g(n) + h(n)
-                var newCost = costSoFar[current] + 1 + heuristic;
+                var newCost = costSoFar[current] + heuristic;
                 
                 // skip if the heuristic value is int.MaxValue
                 if(heuristic == int.MaxValue) continue; // avoid integer overflow
