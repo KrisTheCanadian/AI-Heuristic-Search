@@ -1,6 +1,5 @@
 using Eight_puzzle.Models;
 using Eight_puzzle.Utils.Heuristics.Interfaces;
-using System.Collections.Generic;
 
 namespace Eight_puzzle.Utils.Heuristics.Strategies
 {
@@ -19,12 +18,15 @@ namespace Eight_puzzle.Utils.Heuristics.Strategies
 
                     if (tile == 0) continue;
 
-                    var goalRow = (tile - 1) / puzzle.Board.Count;
-                    var goalCol = (tile - 1) % puzzle.Board[i].Count;
+                    var (goalRow, goalCol) = goalState.GetTileCoordinates(tile);
 
-                    if (i != goalRow || j != goalCol)
+                    if (goalRow != i)
                     {
                         conflicts += GetRowConflicts(puzzle, goalState.Board, i, j, goalCol);
+                    }
+                    
+                    if (goalCol != j)
+                    {
                         conflicts += GetColConflicts(puzzle, goalState.Board, i, j, goalRow);
                     }
                 }
