@@ -47,6 +47,12 @@ public class AdmissibleHeuristicStrategy : IHeuristicStrategy
                 }
             }
         }
+        
+        // if cells with value is only one, then its already connected (apparently, nodes don't need to be in pairs)
+        if (cellsWithTarget.Count == 1)
+        {
+            return true;
+        }
 
         // For each cell with the target value, check if it is connected to any other cell with the target value
         while (cellsWithTarget.Count > 0)

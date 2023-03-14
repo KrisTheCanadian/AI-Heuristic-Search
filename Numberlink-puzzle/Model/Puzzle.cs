@@ -17,7 +17,6 @@ public class Puzzle
     public int Columns { get; set; }
     public int[,] Grid { get; set; }
     public int PathsCount { get; set; }
-    public Puzzle? Parent { get; set; }
 
     // Counts number of paths in the puzzle
     private int CountPaths()
@@ -55,10 +54,11 @@ public class Puzzle
                 }
             }
 
-            if (cellsWithNumber.Count < 2)
-            {
-                return false;
-            }
+            // this rule was initially in assignment 1, looks like its optional
+            // if (cellsWithNumber.Count < 2)
+            // {
+            //     return false;
+            // }
             
             
             // check if path is valid for each pair of cells
